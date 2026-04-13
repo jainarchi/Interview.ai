@@ -13,26 +13,24 @@ const Login = () => {
     setError,
   } = useForm({
     resolver: zodResolver(loginSchema),
-  });
+  })
+  
 
   const { handleLogin, loading, error: backendError, user , clearError  } = useAuth();
   const navigate = useNavigate()
 
-    useEffect(() => {
-       
+    useEffect(() =>{
        return () => {
          clearError()
        }
      }, [])
 
-     
+
   useEffect(() => {
     if (user) {
       navigate("/", { replace: true });
     }
   }, [user])
-
-
 
 
   useEffect(() => {
@@ -42,7 +40,7 @@ const Login = () => {
           type: "manual",
           message: err.msg,
         });
-      });
+      })
     }
   }, [backendError, setError]);
 
@@ -53,6 +51,9 @@ const Login = () => {
       navigate("/", { replace: true });
     }
   };
+
+
+
 
   return (
     <div>

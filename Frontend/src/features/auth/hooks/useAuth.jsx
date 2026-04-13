@@ -12,15 +12,12 @@ export const useAuth = () => {
 
   const handleRegister = async ({ username, email, password }) => {
     try {
-        console.log(username , email , password)
       setLoading(true);
       const data = await register({ username, email, password })
       setUser(data.user)
       setError(null)
-      console.log(data.user)
       
     } catch (err) {
-      console.log( "error in register api" , err.message)
       setError(err.message)
 
 
@@ -53,8 +50,7 @@ export const useAuth = () => {
       setUser(null)
 
     } catch (err) {
-      console.log(err.message)
-        setError(err.message)
+      setError(err.message)
 
 
     } finally {

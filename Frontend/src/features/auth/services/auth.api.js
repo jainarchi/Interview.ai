@@ -17,7 +17,7 @@ export const register = async ({username, email, password}) => {
     const response = await api.post('/api/auth/register',
        {username, email, password})
        console.log(response.data)
-    return response.data
+       return response.data
 
   } catch (error) {
     handleError(error);
