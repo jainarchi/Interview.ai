@@ -137,7 +137,7 @@ export async function generateInterviewReport({
     });
 
 
-   console.log(JSON.parse(response.text));
+  //  console.log(JSON.parse(response.text));
    return JSON.parse(response.text);
 }
 
