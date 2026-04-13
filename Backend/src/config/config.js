@@ -20,7 +20,9 @@ if(! process.env.REDIS_HOST ||
     throw new Error('One or more Redis environment variables are not defined');
 }
 
-
+if(! process.env.GEMINI_API_KEY){
+    throw new Error('GEMINI_API_KEY is not defined in environment variables');
+}
 
 
 export const appConfig = {
@@ -31,5 +33,6 @@ export const appConfig = {
     redisHost: process.env.REDIS_HOST,
     redisPort: process.env.REDIS_PORT,
     redisPassword: process.env.REDIS_PASSWORD,
-    redisKeyPrefix: process.env.REDIS_KEY_PREFIX
+    redisKeyPrefix: process.env.REDIS_KEY_PREFIX,
+    geminiApiKey: process.env.GEMINI_API_KEY
 }
