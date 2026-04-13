@@ -16,10 +16,12 @@ export const useAuth = () => {
       setLoading(true);
       const data = await register({ username, email, password })
       setUser(data.user)
+      setError(null)
+      console.log(data.user)
       
-    } catch (error) {
-      console.log(error.message)
-      setError(error.message)
+    } catch (err) {
+      console.log( "error in register api" , err.message)
+      setError(err.message)
 
 
     } finally {
@@ -33,10 +35,10 @@ export const useAuth = () => {
         setLoading(true)
         const data = await login({email , password})
         setUser(data.user)
+        setError(null)
 
-      }catch(error){
-        console.log(error.message)
-        setError(error.message)
+      }catch(err){
+        setError(err.message)
 
       }finally{
           setLoading(false)
@@ -50,9 +52,9 @@ export const useAuth = () => {
       await logout()
       setUser(null)
 
-    } catch (error) {
-      console.log(error.message)
-        setError(error.message)
+    } catch (err) {
+      console.log(err.message)
+        setError(err.message)
 
 
     } finally {
@@ -67,10 +69,8 @@ export const useAuth = () => {
       const data = await getMe()
       setUser(data.user)
 
-    } catch (error) {
-      console.log(error.message)
-        setError(error.message)
-
+    } catch (err) {
+      console.log(err.message)
 
     } finally {
       setLoading(false)
@@ -78,7 +78,9 @@ export const useAuth = () => {
   }
 
 
- 
+ const clearError = () => {
+  setError(null)
+}
 
   useEffect(() => {
     handleGetMe()
@@ -94,6 +96,7 @@ export const useAuth = () => {
     handleRegister,
     handleLogin,
     handleLogout,
-    handleGetMe
+    handleGetMe,
+    clearError
   };
 };

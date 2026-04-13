@@ -16,7 +16,7 @@ const tokenInResponse = async (user , res , statusCode , message) => {
         expires : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) ,
         httpOnly : true ,
         secure : appConfig.nodeEnv === 'production' ,
-        sameSite : 'none'
+        sameSite : appConfig.nodeEnv === 'production' ? 'none' : 'lax'
     }
      
     user.password = undefined

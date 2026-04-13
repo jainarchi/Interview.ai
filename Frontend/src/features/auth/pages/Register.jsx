@@ -1,55 +1,103 @@
-import React, { useState } from 'react'
-import { Link , useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '../hooks/useAuth'
+import { registerSchema } from '../validators/auth.validator'
+
 const Register = () => {
-    const {handleRegister , loading} = useAuth()
+    const {
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting },
+      setError,
+    } = useForm({
+      resolver: zodResolver(registerSchema),
+    })
+
+    const {handleRegister , loading, error: backendError , user , clearError } = useAuth()
     const navigate = useNavigate()
 
-   const [form, setForm] = useState({
-    username : "",
-    email : "",
-    password : ""
-   })
+
+    useEffect(() => {
+      
+      return () => {
+        clearError()
+      }
+    }, [])
+    
+
+     useEffect(() => {
+     
+      if(user){
+         navigate("/" , { replace : true})
+      }
+     }, [ user])
+     
+
+ 
+
+    useEffect(() => {
+      if (backendError && backendError.errors) {
+        backendError.errors.forEach((err) => {
+          setError(err.path, {
+            type: "manual",
+            message: err.msg,
+          })
+        })
+      }
+    }, [backendError, setError])
 
 
-   const handleChange = (e) =>{
-    setForm({...form , [e.target.name] : e.target.value})
-   }
+    
+    const onSubmit = async (data) => {
+      await handleRegister(data)
+      if(user){
+        console.log(user)
+       return navigate("/" , { replace : true})
+      }
+     
+    }
 
-   const handleSubmit = (e) =>{
-    e.preventDefault()
-    handleRegister(form)
-    navigate('/login')
-   }
 
 
    
  return (
     <div>
-        register
-        <form onSubmit={handleSubmit}>
-            <input 
-            type="text"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            placeholder="username"
-            />
-            <input 
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="email"
-            />
-            <input 
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="password"
-            />
-            <button type="submit" disabled={loading}>Register</button>
+        <h2>Register</h2>
+
+        <p>{backendError ? backendError : ""}</p>
+
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+
+            <div>
+              <input 
+              type="text"
+              placeholder="username"
+              {...register("username")}
+              />
+              {errors.username && <p style={{ color: "red" }}>{errors.username.message}</p>}
+            </div>
+            <div>
+              <input 
+              type="email"
+              placeholder="email"
+              {...register("email")}
+              />
+              {errors.email && <p style={{ color: "red" }}>{errors.email.message}</p>}
+            </div>
+            <div>
+              <input 
+              type="password"
+              placeholder="password"
+              {...register("password")}
+              />
+              {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
+            </div>
+            <button type="submit" disabled={loading || isSubmitting}>
+              {loading ? "Registering..." : "Register"}
+            </button>
         </form>
         <Link to="/login">Login</Link>
     </div>
