@@ -35,16 +35,186 @@ const interviewReportSchema = z.object({
     title: z.string().describe("The title of the job for which the interview report is generated"),
 })
 
+export const normalizeAIResponse = (raw) => {
+
+  // Fix broken JSON arrays like ["{", "question...", "}"]
+  const fixBrokenArray = (arr) => {
+  if (!Array.isArray(arr)) return [];
+
+  const result = [];
+  let current = {};
+
+  for (let item of arr) {
+    item = item.trim();
+
+    if (item === "{") {
+      current = {};
+      continue;
+    }
+
+    if (item === "}") {
+      result.push(current);
+      current = {};
+      continue;
+    }
+
+    // parse key-value manually
+    const match = item.match(/(\w+)\":\s*\"(.+)\"/);
+
+    if (match) {
+      const key = match[1];
+      const value = match[2];
+      current[key] = value;
+    }
+  }
+
+  return result;
+};
+
+  const normalizeQA = (arr) => {
+    return arr.map((q) => ({
+      question: q.question || "",
+      intension: q.intension || "",
+      answer: q.answer || q.answer_key || "",
+    }));
+  };
+
+  const normalizeSkills = (arr) => {
+    return arr.map((s) => ({
+      skill: s.skill || "",
+      severity: (s.severity || "low").toLowerCase(),
+    }));
+  };
+
+
+  const technical = fixBrokenArray(raw.technical_questions);
+  const behavioral = fixBrokenArray(raw.behavioral_questions);
+  const skills = fixBrokenArray(raw.skill_gaps);
+  const plan = fixBrokenArray(raw.preparation_plan);
 
 
 
+
+  return {
+    matchScore: typeof raw.match_score === "string"
+      ? parseInt(raw.match_score)
+      : raw.match_score || 0,
+
+    technicalQuestions: normalizeQA(technical),
+
+    behavioralQuestions: normalizeQA(behavioral),
+
+    skillGaps: normalizeSkills(skills),
+
+    preparationPlan: plan,
+
+    title: raw.job_role || raw.title || "Interview Report",
+  };
+};
+
+
+ const sampleResponse = {
+    "success": true,
+    "report": {
+        "candidate_name": "Archi Jain",
+        "job_role": "Full Stack Web Developer Intern",
+        "company_name": "Dexter’s Tech",
+        "match_score": 95,
+        "technical_questions": [
+            "{",
+            "question\": \"Explain the difference between SQL and NoSQL databases, specifically focusing on why you chose MongoDB for your SkillSphere project.\",",
+             "intension\": \"To assess the candidate's understanding of database architecture and their ability to justify technology choices.\",",
+            "answer_key\": \"SQL is relational with fixed schemas, while NoSQL is document-based and schema-less. For SkillSphere, MongoDB was chosen because quiz data and user profiles can vary in structure, and JSON-like documents align perfectly with the JavaScript-heavy stack.\"",
+            "}",
+            "{",
+            "question\": \"How do you handle authentication and authorization in a MERN application using JWT?\",",
+             "intension\": \"To evaluate security knowledge and practical implementation of state-less authentication.\",",
+            "answer_key\": \"Upon login, the server generates a JWT signed with a secret key. This token is sent to the client and stored (e.g., in localStorage or HttpOnly cookies). For protected routes, the client sends the token in the Authorization header. The server verifies it using middleware before granting access.\"",
+            "}",
+            "{",
+            "question\": \"In your InfraAI project, how did you implement real-time word-by-word streaming using Gemini API?\",",
+             "intension\": \"To test hands-on experience with AI integration and asynchronous data handling.\",",
+            "answer_key\": \"I used the Gemini API’s streaming capability and leveraged Socket.IO or Server-Sent Events (SSE) to push data chunks to the frontend as they were generated, rather than waiting for the entire response to be ready.\"",
+            "}",
+            "{",
+            "question\": \"What are the advantages of using React Hooks like useMemo and useCallback?\",",
+             "intension\": \"To assess frontend performance optimization skills.\",",
+            "answer_key\": \"useMemo memoizes the result of a calculation to prevent expensive re-computations on every render. useCallback memoizes the function instance itself to prevent unnecessary re-renders of child components that depend on function props.\"",
+            "}"
+        ],
+        "behavioral_questions": [
+            "{",
+            "question\": \"Tell me about a time you encountered a significant bug during development. How did you resolve it?\",",
+             "intension\": \"To evaluate problem-solving skills and technical resilience.\",",
+            "answer_key\": \"The candidate should describe a specific issue (e.g., JWT token blacklisting or Socket.IO sync issues), explain the debugging process using tools like Postman or VS Code debugger, and the final resolution.\"",
+            "}",
+            "{",
+            "question\": \"How do you stay updated with the latest trends in web development and AI?\",",
+             "intension\": \"To gauge the candidate's passion for continuous learning, which is a core value at Dexter's Tech.\",",
+            "answer_key\": \"Mentioning specific resources like tech blogs, GitHub repositories, official documentation for LangChain/Gemini, or participating in coding marathons like the one at Sheryians.\"",
+            "}"
+        ],
+        "skill_gaps": [
+            "{",
+            "skill\": \"Testing Frameworks (Jest, Mocha)\",",
+            "severity\": \"Medium\"",
+            "}",
+            "{",
+            "skill\": \"Cloud Deployment (AWS, Heroku, or Vercel pipeline configuration)\",",
+            "severity\": \"Low\"",
+            "}",
+            "{",
+            "skill\": \"Advanced CSS Animation Libraries (Framer Motion)\",",
+            "severity\": \"Low\"",
+            "}"
+        ],
+        "preparation_plan": [
+            "{",
+            "day\": 1,",
+            "focus\": \"JavaScript & React Core\",",
+            "topics\": [\"ES6+ Features\", \"Closures\", \"Event Loop\", \"React Component Lifecycle\", \"Virtual DOM\"],",
+            "activities\": \"Review basic to advanced JS questions. Refactor a small part of SkillSphere to use advanced hooks.\"",
+            "}",
+            "{",
+            "day\": 2,",
+            "focus\": \"Backend & Security\",",
+            "topics\": [\"Node.js Architecture\", \"Express Middleware\", \"JWT Authentication\", \"Token Blacklisting\"],",
+            "activities\": \"Re-read the implementation details of authentication in InfraAI. Practice writing custom Express middlewares.\"",
+            "}",
+            "{",
+            "day\": 3,",
+            "focus\": \"Database & AI Integration\",",
+            "topics\": [\"MongoDB Aggregation\", \"Indexing\", \"LangChain basics\", \"Vector Stores\"],",
+            "activities\": \"Explore how Tavily search and Gemini were integrated in InfraAI. Practice complex MongoDB queries.\"",
+            "}",
+            "{",
+            "day\": 4,",
+            "focus\": \"DSA & Logic Building\",",
+            "topics\": [\"Arrays\", \"Strings\", \"Linked Lists\", \"Basic Dynamic Programming\"],",
+            "activities\": \"Solve top 10 most-asked interview questions on LeetCode related to MERN developer roles.\"",
+            "}",
+            "{",
+            "day\": 5,",
+            "focus\": \"Frontend Styling & Responsive Design\",",
+            "topics\": [\"Tailwind CSS best practices\", \"SCSS Mixins\", \"Responsive layouts\"],",
+            "activities\": \"Ensure all project demos are perfectly responsive on mobile devices. Review CSS Flexbox and Grid.\"",
+            "}",
+            "{",
+            "day\": 6,",
+            "focus\": \"Mock Interviews & Behavioral Prep\",",
+            "topics\": [\"STAR Method\", \"Project Walkthroughs\", \"Company Research\"],",
+            "activities\": \"Record yourself explaining your projects. Research Dexter's Tech's recent work and prepare 3 questions to ask the interviewer.\"",
+            "}"
+        ]
+    }
+}
 
 export async function generateInterviewReport({
   resume,
   jobDescription,
   selfDescription,
 }) {
-  const prompt = `Generate an Interview Report for the following details that help the candidate prepare for the interview effectively. The report should include a match score, technical and behavioral questions with their intention and answer keys, skill gaps with their severity, and a day-wise preparation plan target to job role. :
+  const prompt = `Generate an Interview Report for the following details that help the candidate prepare for the interview effectively. The report should include a match score, technical and behavioral questions with their "intension and answer keys, skill gaps with their severity, and a day-wise preparation plan target to job role. :
 
         Candidate's Resume:${resume}
 
@@ -54,18 +224,20 @@ export async function generateInterviewReport({
 
 
 
-    const response = await ai.models.generateContent({
-        model: "gemini-flash-latest",
-        contents: prompt,
-        config: {
-        responseMimeType: "application/json",
-        responseSchema: zodToJsonSchema(interviewReportSchema),
-        },
-    });
-
-
-  //  console.log(JSON.parse(response.text));
-   return JSON.parse(response.text);
+    // const response = await ai.models.generateContent({
+    //     model: "gemini-3-flash-preview",
+    //     contents: prompt,
+    //     config: {
+    //     responseMimeType: "application/json",
+    //     responseSchema: zodToJsonSchema(interviewReportSchema),
+    //     },
+    // });
+   
+  //  const raw = JSON.parse(response.text);
+   
+  
+   const cleanData = normalizeAIResponse(sampleResponse.report);
+    console.log(cleanData)
+   return cleanData;
 }
-
 

@@ -8,7 +8,7 @@ const technicalQuestionSchema = new mongoose.Schema({
     } ,
     intension :{
         type : String ,
-        required : [true , 'Intention of interviewer is required']
+        required : [true , 'Intension of interviewer is required']
     },
     answer : {
         type : String ,
@@ -26,7 +26,7 @@ const behavioralQuestionSchema = new mongoose.Schema({
     } ,
     intension :{
         type : String ,
-        required : [true , 'Intention of interviewer is required']
+        required : [true , 'Intension of interviewer is required']
     },    
     answer : {
         type : String ,
@@ -55,16 +55,20 @@ const skillGapSchema = new mongoose.Schema({
 const preparationPlanSchema = new mongoose.Schema({
     day : {
         type : Number ,
-        required : [true , 'Day is required']
+        // required : [true , 'Day is required']
     } ,
     focus : {
         type : String ,
         required : [true , 'focus is required']
     },
-    tasks : [{
-        type : [String] ,
-        required : [true , 'Task is required']
-    }]
+    tasks : {
+        type : String
+    },
+    activities : {
+        type : String
+    }
+}, {
+    _id : false
 })
 
 
@@ -85,6 +89,10 @@ const interviewReportSchema = new mongoose.Schema({
         required : true ,
         trim : true
     } ,
+    title:{
+        type : String ,
+        required : [true , 'Title is required']
+    },
     matchScore :{
         type : Number ,
         required : true,
@@ -105,3 +113,5 @@ const interviewReportSchema = new mongoose.Schema({
 
 
 const interviewReportModel = mongoose.model('interviewReport' , interviewReportSchema)
+
+export default interviewReportModel
