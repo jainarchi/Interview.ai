@@ -2,9 +2,11 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
 import { generateInterviewReport } from "../services/ai.service.js";
+import interviewReportModel from "../models/interviewReport.model.js";
 
-
-
+/**
+ * @desc Generate Interview Report based on user's self description, resume and job description
+ */
 const generateInterviewReportController = async (req, res) => {
   try {
     if (!req.file) {
@@ -44,17 +46,26 @@ const generateInterviewReportController = async (req, res) => {
     }
 
     // ai call to generate report with extracted text, job description and self description
-    const report = await generateInterviewReport({
+    const interviewReport = await generateInterviewReport({
       resume: data.text,
       jobDescription,
       selfDescription,
     })
 
-    // console.log("Generated Report:", report)
+    // save report in database
+
+   const createReport = await interviewReportModel.create({
+      user: req.user.id,
+      jobDescription,
+      selfDescription,
+      resume: data.text,
+      ...interviewReport,
+    });
+
 
     res.status(200).json({
       success: true,
-      report,
+      createReport
     });
 
   } catch (err) {
@@ -68,4 +79,89 @@ const generateInterviewReportController = async (req, res) => {
 };
 
 
-export { generateInterviewReportController };
+
+
+
+/**
+ * @desc Get all interview reports of logged in user with only title and id of report
+ */
+const getAllInterviewReports = async (req, res) => {
+  try {
+    const reports = await interviewReportModel.find(
+      { user: req.user.id } , 
+      {title : 1 , _id : 1})
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      reports,
+    });
+  } catch (err) {
+    console.error("ERROR :", err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+    });
+  }
+};
+
+
+/**
+ * @desc Get interview report by id
+ */
+const getInterviewReportById = async (req, res) => {
+  try{
+    const reportID = req.params.id
+   
+    // check for valid id 
+    if(!reportID.match(/^[0-9a-fA-F]{24}$/)){
+      return res.status(400).json({
+        success : false ,
+        message : 'Invalid report id'
+      })
+    }
+
+    const report = await interviewReportModel.findById(reportID)
+
+    if(!report){
+      return res.status(404).json({
+        success : false ,
+        message : 'Report not found'
+      })
+    }
+
+    if(report.user.toString() !== req.user.id.toString()){
+
+      return res.status(401).json({
+        success : false ,
+        message : 'Report not found'
+      })
+    }
+
+    res.status(200).json({
+      success : true ,
+      report
+    })
+
+  }
+  catch (err) {
+    console.error("ERROR :", err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong",
+    })
+  }
+
+}
+
+
+
+
+
+export { 
+  generateInterviewReportController, 
+  getAllInterviewReports , 
+  getInterviewReportById
+ };
