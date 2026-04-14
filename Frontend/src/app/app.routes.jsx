@@ -2,7 +2,8 @@ import {createBrowserRouter} from "react-router-dom";
 import Register from "../features/auth/pages/Register.jsx";
 import Login from "../features/auth/pages/Login.jsx";
 import Protected from "../features/auth/components/Protected.jsx";
-
+import Home from "../features/interview/pages/Home.jsx";
+import InterviewReport from "../features/interview/pages/InterviewReport.jsx";
 
 
 export const appRoutes = createBrowserRouter([
@@ -13,10 +14,25 @@ export const appRoutes = createBrowserRouter([
     {
         path : "/login",
         element : <Login/>
-    },
+    }, 
+   {
+    element: <Protected />,
+    children : [
     {
         path : "/",
-        element : <Protected><h1>Home Page</h1></Protected>
+        element : <Home />
+    },
+    {
+        path: '/interviewreport',
+        element: <InterviewReport />
+    },
+    {
+        path : '*',
+        element : <Home />
     }
+  ]
+
+   }
+
 
 ])

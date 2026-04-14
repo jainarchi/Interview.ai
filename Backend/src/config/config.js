@@ -25,8 +25,11 @@ if(! process.env.GEMINI_API_KEY){
 }
 
 
+
+
 export const appConfig = {
     port: process.env.PORT || 3000,
+    clientURI: process.env.CLIENT_URI || 'http://localhost:5173',
     nodeEnv: process.env.NODE_ENV || 'development',
     mongoURI: process.env.MONGO_URI,
     jwtSecret: process.env.JWT_SECRET,
