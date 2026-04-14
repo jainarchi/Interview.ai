@@ -6,7 +6,7 @@ const technicalQuestionSchema = new mongoose.Schema({
         type : String ,
         required : [true , 'Question is required']
     } ,
-    intertion :{
+    intension :{
         type : String ,
         required : [true , 'Intention of interviewer is required']
     },
@@ -24,7 +24,7 @@ const behavioralQuestionSchema = new mongoose.Schema({
         type : String ,
         required : [true , 'Question is required']
     } ,
-    intertion :{
+    intension :{
         type : String ,
         required : [true , 'Intention of interviewer is required']
     },    

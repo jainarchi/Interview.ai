@@ -16,13 +16,24 @@ const generateInterviewReportController = async (req, res) => {
 
     const { jobDescription, selfDescription } = req.body;
 
-    if (!jobDescription || !selfDescription) {
+    // replace multiple spaces with single space then trim
+    const cleanText = (text) => text.replace(/\s+/g, " ").trim();
+
+    if (!jobDescription || cleanText(jobDescription).length < 100) {
       return res.status(400).json({
         success: false,
-        message: "Job description and self description are required",
+        message: "Job description must be at least 100 characters",
       });
     }
 
+    if (!selfDescription || cleanText(selfDescription).length < 100) {
+      return res.status(400).json({
+        success: false,
+        message: "Self description must be at least 100 characters",
+      });
+    }
+
+  // Parse PDF and extract text
     const data = await pdfParse(req.file.buffer);
 
     if (!data.text || data.text.trim().length < 50) {
@@ -32,12 +43,13 @@ const generateInterviewReportController = async (req, res) => {
       });
     }
 
+    // ai call to generate report with extracted text, job description and self description
     const report = await generateInterviewReport({
       resume: data.text,
       jobDescription,
       selfDescription,
     })
-    
+
     // console.log("Generated Report:", report)
 
     res.status(200).json({
