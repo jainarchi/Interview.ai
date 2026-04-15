@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import { userAuth } from '../middleware/auth.middleware.js'
-import { generateInterviewReportController , getAllInterviewReports , getInterviewReportById} from '../controller/interview.controllers.js'
+import { generateInterviewReportController , getAllInterviewReports , getInterviewReportById , deleteInterviewReport} from '../controller/interview.controllers.js'
 import {uploadMiddleware} from '../middleware/flile.middleware.js'
 
 const router = Router()
@@ -32,7 +32,16 @@ router.get('/' , userAuth , getAllInterviewReports)
  * @params id
  */
 
-router.get('/:id' , userAuth , getInterviewReportById)
+router.get('/report/:id' , userAuth , getInterviewReportById)
+
+
+/**
+ * @route DELETE /api/interview/:id
+ * @desc Delete interview report by id
+ * @access Private
+ */
+
+router.delete('/report/:id' , userAuth , deleteInterviewReport)
 
 
 export default router
