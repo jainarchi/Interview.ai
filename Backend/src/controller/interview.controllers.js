@@ -54,7 +54,7 @@ const generateInterviewReportController = async (req, res) => {
 
     // save report in database
 
-   const createReport = await interviewReportModel.create({
+   const newReport = await interviewReportModel.create({
       user: req.user.id,
       jobDescription,
       selfDescription,
@@ -65,7 +65,7 @@ const generateInterviewReportController = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      createReport
+      newReport
     });
 
   } catch (err) {
@@ -157,11 +157,51 @@ const getInterviewReportById = async (req, res) => {
 }
 
 
+const deleteInterviewReport = async (req ,res ) =>{
+  try{
+   const reportID = req.params.id
+   
+     // check for valid id 
+    if(!reportID.match(/^[0-9a-fA-F]{24}$/)){
+      return res.status(400).json({
+        success : false ,
+        message : 'Invalid report id'
+      })
+    }
 
+   const report = await interviewReportModel.findOneAndDelete({
+     _id : reportID,
+     user : req.user.id
+  })
+
+   if(!report){
+     return res.status(404).json({
+       success : false ,
+       message : 'Report not found'
+     })
+   }
+
+   res.status(200).json({
+     success : true ,
+     message : 'Report deleted successfully'
+   })
+
+  }
+  catch(err){
+    console.log(err)
+    res.status(500).json({
+      success : false ,
+      message : 'Something went wrong'
+    })
+
+
+  }
+}
 
 
 export { 
   generateInterviewReportController, 
   getAllInterviewReports , 
-  getInterviewReportById
+  getInterviewReportById,
+  deleteInterviewReport
  };

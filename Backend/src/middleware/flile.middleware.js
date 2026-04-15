@@ -9,7 +9,7 @@ const upload = multer({
 
 const uploadMiddleware = (req, res, next) => {
 
-  upload.single("resume")(req, res, function (err) {
+  upload.single("resumeFile")(req, res, function (err) {
     if (err) {
       if (err.code === "LIMIT_FILE_SIZE") {
         return res.status(400).json({
@@ -18,11 +18,11 @@ const uploadMiddleware = (req, res, next) => {
       }
       return res.status(500).json({ message: err.message });
     }
-
+   console.log(req.file)
 
     if (!req.file) {
       return res.status(400).json({
-        message: "Resume is required"
+        message: "Resume is required ..."
       })
     }
 
