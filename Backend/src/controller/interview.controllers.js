@@ -8,6 +8,8 @@ import interviewReportModel from "../models/interviewReport.model.js";
  * @desc Generate Interview Report based on user's self description, resume and job description
  */
 const generateInterviewReportController = async (req, res) => {
+
+  console.log( "controller of gen report " , req.file , req.body)
   try {
     if (!req.file) {
       return res.status(400).json({

@@ -8,6 +8,7 @@ const upload = multer({
 
 
 const uploadMiddleware = (req, res, next) => {
+  console.log(req)
 
   upload.single("resumeFile")(req, res, function (err) {
     if (err) {
@@ -18,7 +19,8 @@ const uploadMiddleware = (req, res, next) => {
       }
       return res.status(500).json({ message: err.message });
     }
-   console.log(req.file)
+
+   console.log(req.file , req.body)
 
     if (!req.file) {
       return res.status(400).json({
