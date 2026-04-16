@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../styles/interview.scss'
 import { useInterview } from '../hooks/useInterview.jsx'
-import { useNavigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 
 
 

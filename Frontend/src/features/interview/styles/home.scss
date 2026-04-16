@@ -111,7 +111,7 @@ $desktop:  1024px;
     max-width: 900px;
     background-color: $bg-card;
     border: 1px solid $border-color;
-    border-radius: 1rem;
+    border-radius: 0.2rem;
     overflow: hidden;
 
     @include respond-to("tablet") {
@@ -282,19 +282,10 @@ $desktop:  1024px;
         .char-counter {
             position: absolute;
             bottom: 2.25rem;
-            right: 2rem;
+            right: 2.4rem;
             font-size: 0.75rem;
             color: $text-muted;
 
-            @include respond-to("tablet") {
-                bottom: 1.75rem;
-                right: 1.5rem;
-            }
-
-            @include respond-to("mobile") {
-                bottom: 1.75rem;
-                right: 1.25rem;
-            }
         }
     }
 
@@ -302,6 +293,7 @@ $desktop:  1024px;
         gap: 0.75rem;
     }
 }
+
 
 // Badges
 .badge {
@@ -424,6 +416,18 @@ $desktop:  1024px;
     flex-direction: column;
     gap: 0.5rem;
     min-height: 240px;
+    position: relative; 
+
+    
+    .char-counter {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            font-size: 0.75rem;
+            color: $text-muted;
+        }
+
+   
 }
 
 // Info Box
@@ -647,6 +651,7 @@ $desktop:  1024px;
 .page-footer {
     display: flex;
     gap: 1.5rem;
+   padding-top: 1rem  ;
 
     a {
         font-size: 0.8rem;

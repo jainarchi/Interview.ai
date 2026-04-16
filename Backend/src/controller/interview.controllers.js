@@ -7,6 +7,8 @@ import interviewReportModel from "../models/interviewReport.model.js";
 /**
  * @desc Generate Interview Report based on user's self description, resume and job description
  */
+
+
 const generateInterviewReportController = async (req, res) => {
 
   console.log( "controller of gen report " , req.file , req.body)
@@ -18,24 +20,13 @@ const generateInterviewReportController = async (req, res) => {
       });
     }
 
-    const { jobDescription, selfDescription } = req.body;
+    let { jobDescription, selfDescription } = req.body;
 
     // replace multiple spaces with single space then trim
     const cleanText = (text) => text.replace(/\s+/g, " ").trim();
+    jobDescription = cleanText(jobDescription);
+    selfDescription = cleanText(selfDescription);
 
-    if (!jobDescription || cleanText(jobDescription).length < 100) {
-      return res.status(400).json({
-        success: false,
-        message: "Job description must be at least 100 characters",
-      });
-    }
-
-    if (!selfDescription || cleanText(selfDescription).length < 100) {
-      return res.status(400).json({
-        success: false,
-        message: "Self description must be at least 100 characters",
-      });
-    }
 
   // Parse PDF and extract text
     const data = await pdfParse(req.file.buffer);
@@ -91,7 +82,12 @@ const getAllInterviewReports = async (req, res) => {
   try {
     const reports = await interviewReportModel.find(
       { user: req.user.id } , 
-      {title : 1 , _id : 1 , matchScore : 1})
+      {
+        title : 1 ,
+        _id : 1 ,
+        matchScore : 1,
+        createdAt : 1
+      })
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -110,20 +106,14 @@ const getAllInterviewReports = async (req, res) => {
 
 
 /**
- * @desc Get interview report by id
+ * @desc Get interview report
+ * @param id
  */
+
 const getInterviewReportById = async (req, res) => {
   try{
     const reportID = req.params.id
    
-    // check for valid id 
-    if(!reportID.match(/^[0-9a-fA-F]{24}$/)){
-      return res.status(400).json({
-        success : false ,
-        message : 'Invalid report id'
-      })
-    }
-
     const report = await interviewReportModel.findById(reportID)
 
     if(!report){
@@ -159,17 +149,15 @@ const getInterviewReportById = async (req, res) => {
 }
 
 
+/**
+ * @desc Delete interview report
+ * @param id
+ */
+
 const deleteInterviewReport = async (req ,res ) =>{
   try{
    const reportID = req.params.id
-   
-     // check for valid id 
-    if(!reportID.match(/^[0-9a-fA-F]{24}$/)){
-      return res.status(400).json({
-        success : false ,
-        message : 'Invalid report id'
-      })
-    }
+  
 
    const report = await interviewReportModel.findOneAndDelete({
      _id : reportID,

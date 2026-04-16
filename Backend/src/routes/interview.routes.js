@@ -2,6 +2,7 @@ import {Router} from 'express'
 import { userAuth } from '../middleware/auth.middleware.js'
 import { generateInterviewReportController , getAllInterviewReports , getInterviewReportById , deleteInterviewReport} from '../controller/interview.controllers.js'
 import {uploadMiddleware} from '../middleware/flile.middleware.js'
+import { mongooseIdValidator , generateInterviewReportValidator } from '../validator/interview.validator.js'
 
 const router = Router()
 
@@ -15,7 +16,7 @@ const router = Router()
  */
 
 
-router.post('/' , userAuth  , uploadMiddleware  ,generateInterviewReportController)
+router.post('/' , userAuth  , uploadMiddleware , generateInterviewReportValidator  ,generateInterviewReportController)
 
 /**
  * @route GET /api/interview
@@ -32,7 +33,7 @@ router.get('/' , userAuth , getAllInterviewReports)
  * @params id
  */
 
-router.get('/report/:id' , userAuth , getInterviewReportById)
+router.get('/report/:id' , userAuth , mongooseIdValidator , getInterviewReportById)
 
 
 /**
@@ -41,7 +42,7 @@ router.get('/report/:id' , userAuth , getInterviewReportById)
  * @access Private
  */
 
-router.delete('/report/:id' , userAuth , deleteInterviewReport)
+router.delete('/report/:id' , userAuth , mongooseIdValidator , deleteInterviewReport)
 
 
 export default router

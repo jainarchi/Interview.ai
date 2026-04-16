@@ -124,7 +124,7 @@ const Home = () => {
                         {/* Quick Self-Description */}
                         <div className='self-description'>
                             <div  className='panel__header' >
-                            <label className='section-label' htmlFor='selfDescription'>Quick Self-Description</label>
+                            <label className='section-label' htmlFor='selfDescription'>Self-Description</label>
                             <span className='badge badge--required'>Required</span>
                             </div>
 

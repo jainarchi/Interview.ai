@@ -22,8 +22,8 @@ const jobDescriptionSchema = z
   .string()
   .trim()
   .min(1, 'Job description is required')
-  .min(700, 'Job description must be at least 700 characters')
-  .max(2500, 'Job description must not exceed 2000 characters');
+  .min(200, 'Job description must be at least 200 characters')
+  .max(2000, 'Job description must not exceed 2000 characters');
 
 
 

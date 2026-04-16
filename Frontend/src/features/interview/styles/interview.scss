@@ -379,13 +379,13 @@ $desktop:  1024px;
         }
 
         &--intention {
-            background-color: rgba(74, 144, 226, 0.15);
+            // background-color: rgba(74, 144, 226, 0.15);
             color: #4a90e2;
             border: 1px solid rgba(74, 144, 226, 0.3);
         }
 
         &--answer {
-            background-color: rgba(63, 185, 80, 0.15);
+            // background-color: rgba(63, 185, 80, 0.15);
             color: $severity-low;
             border: 1px solid rgba(63, 185, 80, 0.3);
         }
@@ -727,7 +727,7 @@ $desktop:  1024px;
     font-size: 0.775rem;
     font-weight: 500;
     padding: 0.3rem 0.7rem;
-    border-radius: 0.4rem;
+    border-radius: 0.2rem;
     border: 1px solid;
     cursor: default;
 

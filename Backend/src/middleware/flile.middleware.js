@@ -20,7 +20,7 @@ const uploadMiddleware = (req, res, next) => {
       return res.status(500).json({ message: err.message });
     }
 
-   console.log(req.file , req.body)
+   console.log('REQ,FILE IN FILE MIDDLEWARE - ' , req.file )
 
     if (!req.file) {
       return res.status(400).json({
