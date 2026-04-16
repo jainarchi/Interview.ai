@@ -13,8 +13,12 @@ const Home = () => {
     const navigate = useNavigate()
 
     const generateReport = async () => {
+
+     // add validation layer and error handling make validon fie inside validators folder
+
         const resumeFile = resumeInputRef.current.files[ 0 ]
         const data = await handleGenerateReport({ jobDescription, selfDescription, resumeFile })
+        console.log(data._id)
         navigate(`/interview/${data._id}`)
     }
 
@@ -54,7 +58,7 @@ const Home = () => {
                             placeholder={`Paste the full job description here...\ne.g. 'Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
                             maxLength={5000}
                         />
-                        <div className='char-counter'>0 / 5000 chars</div>
+                        <div className='char-counter'>{jobDescription.length} / 5000 chars</div>
                     </div>
 
                     {/* Vertical Divider */}
@@ -80,17 +84,21 @@ const Home = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
                                 </span>
                                 <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
-                                <p className='dropzone__subtitle'>PDF or DOCX (Max 5MB)</p>
+                                <p className='dropzone__subtitle'>PDF or DOCX (Max 3MB)</p>
                                 <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' />
                             </label>
                         </div>
 
-                        {/* OR Divider */}
-                        <div className='or-divider'><span>OR</span></div>
+                       
+                        <hr  className='hr'/>
 
                         {/* Quick Self-Description */}
                         <div className='self-description'>
+                            <div  className='panel__header' >
                             <label className='section-label' htmlFor='selfDescription'>Quick Self-Description</label>
+                            <span className='badge badge--required'>Required</span>
+                            </div>
+
                             <textarea
                                 onChange={(e) => { setSelfDescription(e.target.value) }}
                                 id='selfDescription'
@@ -101,21 +109,21 @@ const Home = () => {
                         </div>
 
                         {/* Info Box */}
-                        <div className='info-box'>
+                        {/* <div className='info-box'>
                             <span className='info-box__icon'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" stroke="#1a1f27" strokeWidth="2" /><line x1="12" y1="16" x2="12.01" y2="16" stroke="#1a1f27" strokeWidth="2" /></svg>
                             </span>
                             <p>Either a <strong>Resume</strong> or a <strong>Self Description</strong> is required to generate a personalized plan.</p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
                 {/* Card Footer */}
                 <div className='interview-card__footer'>
-                    <span className='footer-info'>AI-Powered Strategy Generation &bull; Approx 30s</span>
+                    <span className='footer-info'>AI-Powered Strategy Generation • Approx 30s</span>
                     <button
                         onClick={generateReport}
-                        className='generate-btn'>
+                        className='btn-generate'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" /></svg>
                         Generate My Interview Strategy
                     </button>

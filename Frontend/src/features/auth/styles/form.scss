@@ -1,0 +1,438 @@
+@use "sass:color";
+
+// Shared Variables
+$bg-page:        #0d1117;
+$bg-card:        #161b22;
+$bg-panel:       #1c2230;
+$bg-input:       #1e2535;
+$border-color:   #2a3348;
+$text-primary:   #e6edf3;
+$text-muted:     #7d8590;
+$accent:         #ff2d78;
+$accent-alt:     #ff6b9d;
+$error-color:    #ff4d4d;
+$success-color:  #3fb950;
+$font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+// Breakpoints
+$mobile:   480px;
+$tablet:   768px;
+$desktop:  1024px;
+
+// Mixins
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == "mobile" {
+        @media (max-width: 479px) {
+            @content;
+        }
+    } @else if $breakpoint == "tablet" {
+        @media (max-width: 767px) {
+            @content;
+        }
+    } @else if $breakpoint == "desktop" {
+        @media (min-width: 1024px) {
+            @content;
+        }
+    }
+}
+
+// Page Shell
+.auth-page {
+    width: 100%;
+    min-height: 100vh;
+    background-color: $bg-page;
+    color: $text-primary;
+    font-family: $font-stack;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+
+    @include respond-to("mobile") {
+        padding: 1rem;
+    }
+}
+
+// Main Container
+.auth-container {
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @include respond-to("mobile") {
+        max-width: 100%;
+        gap: 1rem;
+    }
+}
+
+// Header Section
+.auth-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        color: $text-primary;
+
+        @include respond-to("mobile") {
+            font-size: 1.5rem;
+        }
+
+        .highlight {
+            color: $accent;
+        }
+    }
+
+    p {
+        font-size: 0.95rem;
+        color: $text-muted;
+        margin: 0;
+        line-height: 1.6;
+
+        @include respond-to("mobile") {
+            font-size: 0.9rem;
+        }
+    }
+}
+
+// Form Card
+.auth-form-card {
+    background-color: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @include respond-to("tablet") {
+        padding: 1.5rem;
+        gap: 1.25rem;
+    }
+
+    @include respond-to("mobile") {
+        padding: 1.25rem;
+        gap: 1rem;
+        border-radius: 0.75rem;
+    }
+}
+
+// Form Group
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: $text-primary;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        @include respond-to("mobile") {
+            font-size: 0.85rem;
+        }
+
+        .required {
+            color: $error-color;
+            font-weight: 600;
+        }
+    }
+
+    input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: $bg-input;
+        border: 1px solid $border-color;
+        border-radius: 0.5rem;
+        color: $text-primary;
+        font-family: $font-stack;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, background-color 0.2s;
+        box-sizing: border-box;
+
+        @include respond-to("mobile") {
+            font-size: 1rem; // Prevents zoom on iOS
+            padding: 0.875rem 1rem;
+        }
+
+        &::placeholder {
+            color: $text-muted;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: $accent;
+            box-shadow: 0 0 0 3px rgba($accent, 0.1);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        &.error {
+            border-color: $error-color;
+
+            &:focus {
+                box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+            }
+        }
+    }
+}
+
+// Error Message
+.form-error {
+    font-size: 0.8rem;
+    color: $error-color;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    @include respond-to("mobile") {
+        font-size: 0.75rem;
+    }
+
+    svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+    }
+}
+
+// Success Message
+.form-success {
+    font-size: 0.85rem;
+    color: $success-color;
+    background-color: rgba($success-color, 0.1);
+    border: 1px solid rgba($success-color, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @include respond-to("mobile") {
+        font-size: 0.8rem;
+        padding: 0.65rem 0.85rem;
+    }
+}
+
+// Alert Message
+.form-alert {
+    font-size: 0.85rem;
+    color: $error-color;
+    background-color: rgba($error-color, 0.1);
+    border: 1px solid rgba($error-color, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+
+    @include respond-to("mobile") {
+        font-size: 0.8rem;
+        padding: 0.65rem 0.85rem;
+    }
+}
+
+// Submit Button
+.btn-submit {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(
+        135deg,
+        $accent 0%,
+        color.adjust($accent, $lightness: -10%) 100%
+    );
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-family: $font-stack;
+    transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+
+    @include respond-to("mobile") {
+        font-size: 0.9rem;
+        padding: 0.8rem 1.25rem;
+    }
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+        box-shadow: 0 4px 12px rgba($accent, 0.3);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// Form Divider
+.form-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: $text-muted;
+    font-size: 0.8rem;
+
+    @include respond-to("mobile") {
+        gap: 0.75rem;
+    }
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background-color: $border-color;
+    }
+
+    span {
+        white-space: nowrap;
+    }
+}
+
+// Footer Links
+.auth-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: $text-muted;
+
+    @include respond-to("mobile") {
+        font-size: 0.85rem;
+    }
+
+    a {
+        color: $accent;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+
+        &:hover {
+            color: $accent-alt;
+        }
+    }
+
+    .divider {
+        margin: 0 0.5rem;
+        color: $border-color;
+    }
+}
+
+// Loading State
+.loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::after {
+        content: '';
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba($text-primary, 0.3);
+        border-top-color: $text-primary;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Info Box
+.info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background-color: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.25);
+    border-radius: 0.5rem;
+
+    @include respond-to("mobile") {
+        gap: 0.5rem;
+        padding: 0.75rem 0.85rem;
+    }
+
+    .icon {
+        flex-shrink: 0;
+        color: #4a90e2;
+        margin-top: 2px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #8ab4f8;
+        line-height: 1.5;
+
+        @include respond-to("mobile") {
+            font-size: 0.75rem;
+        }
+
+        strong {
+            color: $text-primary;
+        }
+    }
+}
+
+// Responsive Adjustments
+@media (max-width: 479px) {
+    .auth-page {
+        min-height: auto;
+        min-height: 100dvh; // Dynamic viewport height for mobile
+    }
+
+    .auth-container {
+        gap: 0.75rem;
+    }
+
+    .auth-form-card {
+        gap: 0.75rem;
+    }
+}
+
+// Tablet Optimizations
+@media (min-width: 480px) and (max-width: 767px) {
+    .auth-page {
+        padding: 1.25rem;
+    }
+
+    .auth-container {
+        max-width: 420px;
+    }
+}
+
+// Desktop Enhancements
+@media (min-width: 1024px) {
+    .auth-page {
+        padding: 2rem;
+    }
+
+    .auth-form-card {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-group input:focus {
+        box-shadow: 0 0 0 4px rgba($accent, 0.15);
+    }
+}
