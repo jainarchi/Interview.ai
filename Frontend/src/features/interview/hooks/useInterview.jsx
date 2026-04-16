@@ -13,6 +13,7 @@ export const useInterview = () => {
             setLoading(true)
             const data = await generateInterviewReport({jobDescription , selfDescription , resumeFile})
             setReport(data.newReport)
+            console.log('setting...')
             return data.newReport
 
         } catch (err) {

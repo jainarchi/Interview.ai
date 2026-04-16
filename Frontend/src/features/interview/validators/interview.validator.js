@@ -31,8 +31,8 @@ const selfDescriptionSchema = z
   .string()
   .trim()
   .min(1, 'Self description is required')
-  .min(400, 'Self description must be at least 400 characters')
-  .max(800, 'Self description must not exceed 800 characters');
+  .min(50, 'Self description must be at least 50 characters')
+  .max(200, 'Self description must not exceed 200 characters');
 
 
 

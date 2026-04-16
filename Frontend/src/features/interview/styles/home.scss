@@ -7,7 +7,7 @@ $bg-panel:       #1c2230;
 $bg-input:       #1e2535;
 $border-color:   #2a3348;
 $text-primary:   #e6edf3;
-$text-muted:     #7d8590;
+$text-muted:     #8e95a0;
 $accent:         #ff2d78;
 $accent-alt:     #ff6b9d;
 $badge-required: #ff2d78;
@@ -531,10 +531,12 @@ $desktop:  1024px;
     }
 
     h2 {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 600;
         color: $text-primary;
         margin: 0;
+        text-align: center;
+        padding-block: 2rem 1rem;
 
         @include respond-to("mobile") {
             font-size: 1rem;
@@ -550,7 +552,7 @@ $desktop:  1024px;
         padding: 0;
 
         @include respond-to("tablet") {
-            gap: 0.5rem;
+            gap: 0.7rem;
         }
 
         @include respond-to("mobile") {
@@ -564,10 +566,10 @@ $desktop:  1024px;
             border-radius: 0.5rem;
             padding: 1rem;
             flex: 1;
-            min-width: 250px;
+            min-width: 300px;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 1rem;
             cursor: pointer;
             transition: border-color 0.2s, box-shadow 0.2s;
 
@@ -649,20 +651,22 @@ $desktop:  1024px;
 
 
 .page-footer {
-    display: flex;
-    gap: 1.5rem;
-   padding-top: 1rem  ;
+    // background: red;
+    padding-top: 1rem  ;
+   
 
-    a {
-        font-size: 0.8rem;
-        color: $text-muted;
-        text-decoration: none;
-        transition: color 0.2s;
+    p{
+    padding: 0.5rem;
+    padding-top: 2rem ;
 
-        &:hover {
-            color: $text-primary;
-        }
-    }
+    text-align: center;
+    max-width: 600px;
+    color: $text-muted; 
+    font-size: 0.84rem;   
+}
+
+
+   
 }
 
 // Error Banner

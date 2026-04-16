@@ -10,8 +10,8 @@ const Home = () => {
     const { loading, handleGenerateReport , handleGetAllReports, handleDeleteReport, reports } = useInterview()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
+    const [ resumeFile , setResumeFile ] = useState(null)
     const [ errors, setErrors ] = useState({})
-    const resumeInputRef = useRef()
 
     const navigate = useNavigate()
 
@@ -22,8 +22,7 @@ const Home = () => {
     
 
     const generateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[0]
-     
+        console.log(resumeFile)
         
         const validation = validateInterviewForm({
             jobDescription,
@@ -32,17 +31,18 @@ const Home = () => {
         })
 
         if (!validation.success) {
-            // setErrors(validation.errors)
-            console.error("Validation errors:", validation.errors)
+            setErrors(validation.errors)
+            // console.error("Validation errors:", validation.errors)
             return
         }
 
         setErrors({})
         setJobDescription("")
         setSelfDescription("")
+        setResumeFile(null)
         const newReport = await handleGenerateReport({ jobDescription, selfDescription, resumeFile })
-        console.log(newReport)
-        console.log(newReport._id)
+
+        // console.log(newReport)
         const url = `/interview/${newReport._id}`
         navigate(`${url}`)
     }
@@ -111,9 +111,19 @@ const Home = () => {
                                 <span className='dropzone__icon'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
                                 </span>
-                                <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
+                             
+                                
+                                <p className='dropzone__title'>{ resumeFile ? resumeFile.name : 'Click to upload or drag &amp; drop'}</p>
                                 <p className='dropzone__subtitle'>PDF or DOCX (Max 3MB)</p>
-                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' />
+                                <input 
+                                // ref={resumeInputRef}
+                                 hidden 
+                                 type='file' 
+                                 id='resume' 
+                                 name='resume' 
+                                 accept='.pdf,.docx'
+                                 onChange={(e) => setResumeFile(e.target.files[0])}
+                                 />
                             </label>
                             {errors.resumeFile && <div className='error-message'>{errors.resumeFile}</div>}
                         </div>
@@ -135,7 +145,7 @@ const Home = () => {
                                 className='panel__textarea panel__textarea--short'
                                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
                             />
-                            <div className='char-counter'>{selfDescription.length} / 800 chars</div>
+                            <div className='char-counter'>{selfDescription.length} / 300 chars</div>
                             {errors.selfDescription && <div className='error-message'>{errors.selfDescription}</div>}
                         </div>
 
@@ -174,8 +184,10 @@ const Home = () => {
                                     </span>
                                 </div>
 
-                                <p className='report-meta'>Generated on {new Date(report.createdAt).toLocaleDateString()}</p>
                                 <p className={`match-score ${report.matchScore >= 80 ? 'score--high' : report.matchScore >= 60 ? 'score--mid' : 'score--low'}`}>Match Score: {report.matchScore}%</p>
+
+                                <p className='report-meta'>Generated on {new Date(report.createdAt).toLocaleDateString()}</p>
+                                
                             </li>
                         ))}
                     </ul>
@@ -184,9 +196,7 @@ const Home = () => {
 
             {/* Page Footer */}
             <footer className='page-footer'>
-                <a href='#'>Privacy Policy</a>
-                <a href='#'>Terms of Service</a>
-                <a href='#'>Help Center</a>
+              <p> AI-generated insights may include hallucinations or incorrect information. Please review carefully before using in interviews or decisions.</p>
             </footer>
         </div>
     )

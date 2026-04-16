@@ -21,8 +21,8 @@ export const generateInterviewReportValidator = [
     .exists().withMessage('Self description is required')
     .isString().withMessage('Self description must be a string')
     .trim()
-    .isLength({ min: 400, max: 800 })
-    .withMessage('Self description must be between 400 and 800 characters'),
+    .isLength({ min: 50, max: 200 })
+    .withMessage('Self description must be between 50 and 200 characters'),
 
   validateRequest
 ];
