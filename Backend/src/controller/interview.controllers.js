@@ -91,7 +91,7 @@ const getAllInterviewReports = async (req, res) => {
   try {
     const reports = await interviewReportModel.find(
       { user: req.user.id } , 
-      {title : 1 , _id : 1})
+      {title : 1 , _id : 1 , matchScore : 1})
       .sort({ createdAt: -1 });
 
     res.status(200).json({

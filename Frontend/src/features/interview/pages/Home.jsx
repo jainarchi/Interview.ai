@@ -1,26 +1,53 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , useEffect } from 'react'
 import "../styles/home.scss"
 import { useInterview } from '../hooks/useInterview.jsx'
 import { useNavigate } from 'react-router'
+import { validateInterviewForm } from '../validators/interview.validator'
+import { set } from 'zod'
 
 const Home = () => {
 
-    const { loading, handleGenerateReport,reports } = useInterview()
+    const { loading, handleGenerateReport , handleGetAllReports, handleDeleteReport, reports } = useInterview()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
+    const [ errors, setErrors ] = useState({})
     const resumeInputRef = useRef()
 
     const navigate = useNavigate()
 
+    useEffect(() => {
+       handleGetAllReports()
+    
+    }, [])
+    
+
     const generateReport = async () => {
+        const resumeFile = resumeInputRef.current.files[0]
+     
+        
+        const validation = validateInterviewForm({
+            jobDescription,
+            selfDescription,
+            resumeFile
+        })
 
-     // add validation layer and error handling make validon fie inside validators folder
+        if (!validation.success) {
+            // setErrors(validation.errors)
+            console.error("Validation errors:", validation.errors)
+            return
+        }
 
-        const resumeFile = resumeInputRef.current.files[ 0 ]
-        const data = await handleGenerateReport({ jobDescription, selfDescription, resumeFile })
-        console.log(data._id)
-        navigate(`/interview/${data._id}`)
+        setErrors({})
+        setJobDescription("")
+        setSelfDescription("")
+        const newReport = await handleGenerateReport({ jobDescription, selfDescription, resumeFile })
+        console.log(newReport)
+        console.log(newReport._id)
+        const url = `/interview/${newReport._id}`
+        navigate(`${url}`)
     }
+   
+    
 
     if (loading) {
         return (
@@ -58,7 +85,8 @@ const Home = () => {
                             placeholder={`Paste the full job description here...\ne.g. 'Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
                             maxLength={5000}
                         />
-                        <div className='char-counter'>{jobDescription.length} / 5000 chars</div>
+                        <div className='char-counter'>{jobDescription.length} / 2000 chars</div>
+                        {errors.jobDescription && <div className='error-message'>{errors.jobDescription}</div>}
                     </div>
 
                     {/* Vertical Divider */}
@@ -87,6 +115,7 @@ const Home = () => {
                                 <p className='dropzone__subtitle'>PDF or DOCX (Max 3MB)</p>
                                 <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' />
                             </label>
+                            {errors.resumeFile && <div className='error-message'>{errors.resumeFile}</div>}
                         </div>
 
                        
@@ -106,15 +135,11 @@ const Home = () => {
                                 className='panel__textarea panel__textarea--short'
                                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
                             />
+                            <div className='char-counter'>{selfDescription.length} / 800 chars</div>
+                            {errors.selfDescription && <div className='error-message'>{errors.selfDescription}</div>}
                         </div>
 
-                        {/* Info Box */}
-                        {/* <div className='info-box'>
-                            <span className='info-box__icon'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" stroke="#1a1f27" strokeWidth="2" /><line x1="12" y1="16" x2="12.01" y2="16" stroke="#1a1f27" strokeWidth="2" /></svg>
-                            </span>
-                            <p>Either a <strong>Resume</strong> or a <strong>Self Description</strong> is required to generate a personalized plan.</p>
-                        </div> */}
+                     
                     </div>
                 </div>
 
@@ -137,7 +162,18 @@ const Home = () => {
                     <ul className='reports-list'>
                         {reports.map(report => (
                             <li key={report._id} className='report-item' onClick={() => navigate(`/interview/${report._id}`)}>
-                                <h3>{report.title || 'Untitled Position'}</h3>
+
+                                <div className="head">
+                                  <h3>{report.title || 'Untitled Position'}</h3>
+                                  <span className='trash-btn' 
+                                  onClick={(e) =>{
+                                    e.stopPropagation();
+                                    handleDeleteReport(report._id)
+                                    }}>
+                                        Trash
+                                    </span>
+                                </div>
+
                                 <p className='report-meta'>Generated on {new Date(report.createdAt).toLocaleDateString()}</p>
                                 <p className={`match-score ${report.matchScore >= 80 ? 'score--high' : report.matchScore >= 60 ? 'score--mid' : 'score--low'}`}>Match Score: {report.matchScore}%</p>
                             </li>

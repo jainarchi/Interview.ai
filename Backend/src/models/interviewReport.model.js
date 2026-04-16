@@ -19,6 +19,8 @@ const technicalQuestionSchema = new mongoose.Schema({
 })
 
 
+
+
 const behavioralQuestionSchema = new mongoose.Schema({
     question : {
         type : String ,
@@ -36,6 +38,9 @@ const behavioralQuestionSchema = new mongoose.Schema({
     _id : false 
 })
 
+
+
+
 const skillGapSchema = new mongoose.Schema({
     skill : {
         type : String ,
@@ -49,6 +54,8 @@ const skillGapSchema = new mongoose.Schema({
 } , {
     _id : false 
 })
+
+
 
 
 
@@ -110,6 +117,8 @@ const interviewReportSchema = new mongoose.Schema({
     }
 } , { timestamps : true })
     
+
+
 
 
 const interviewReportModel = mongoose.model('interviewReport' , interviewReportSchema)

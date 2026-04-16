@@ -51,7 +51,7 @@ $desktop:  1024px;
     font-family: $font-stack;
     display: flex;
     align-items: stretch;
-    padding: 1.5rem;
+    // padding: 1.5rem;
     box-sizing: border-box;
 
     @include respond-to("tablet") {
@@ -70,10 +70,9 @@ $desktop:  1024px;
     display: flex;
     width: 100%;
     max-width: 1280px;
-    margin: 0 auto;
+    margin-inline: auto;
     background-color: $bg-card;
     border: 1px solid $border-color;
-    border-radius: 1rem;
     justify-content: space-between;
     flex-direction: row;
 
@@ -87,26 +86,16 @@ $desktop:  1024px;
     }
 }
 
-.interview-divider {
-    width: 1px;
-    background-color: $border-color;
-    flex-shrink: 0;
-
-    @include respond-to("tablet") {
-        width: 100%;
-        height: 1px;
-    }
-}
-
 // Left Nav
 .interview-nav {
+ 
     width: 220px;
     flex-shrink: 0;
-    padding: 1.75rem 1rem;
+    padding: 1rem 0.5rem;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     gap: 0.25rem;
+    
+   
 
     @include respond-to("tablet") {
         width: 100%;
@@ -133,21 +122,19 @@ $desktop:  1024px;
         }
     }
 
-    &__label {
-        font-size: 0.7rem;
+    &.label {
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: $text-muted;
-        padding: 0 0.75rem;
-        margin-bottom: 0.5rem;
 
         @include respond-to("tablet") {
             display: none;
         }
     }
 
-    &__item {
+    &.item {
         display: flex;
         align-items: center;
         gap: 0.6rem;
@@ -163,11 +150,14 @@ $desktop:  1024px;
         text-align: left;
         transition: background-color 0.15s, color 0.15s;
         white-space: nowrap;
+        
 
         @include respond-to("tablet") {
             font-size: 0.8rem;
             padding: 0.5rem 0.65rem;
             flex-shrink: 0;
+            width: 70%;
+            border: 1px solid $border-color;
         }
 
         @include respond-to("mobile") {
@@ -178,11 +168,13 @@ $desktop:  1024px;
         &:hover {
             background-color: $bg-panel;
             color: $text-primary;
+            
         }
 
-        &--active {
+        &.active {
             background-color: rgba($accent, 0.1);
             color: $accent;
+            
 
             .interview-nav__icon svg {
                 stroke: $accent;
@@ -196,6 +188,9 @@ $desktop:  1024px;
         flex-shrink: 0;
     }
 }
+
+
+
 
 // Center Content
 .interview-content {
@@ -546,6 +541,13 @@ $desktop:  1024px;
     }
 }
 
+
+
+
+
+
+
+
 //  Right Sidebar 
 .interview-sidebar {
     width: 240px;
@@ -630,6 +632,7 @@ $desktop:  1024px;
         align-items: center;
         justify-content: center;
         border: 4px solid;
+       margin-top: 1rem;
 
         @include respond-to("mobile") {
             width: 80px;
@@ -664,7 +667,7 @@ $desktop:  1024px;
     &__pct {
         font-size: 0.75rem;
         color: $text-muted;
-        margin-top: -2px;
+        margin-top: -1px;
 
         @include respond-to("mobile") {
             font-size: 0.7rem;
@@ -687,10 +690,10 @@ $desktop:  1024px;
 .skill-gaps {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.9rem;
 
-    &__label {
-        font-size: 0.75rem;
+    &.label {
+        font-size: 0.85rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -698,11 +701,26 @@ $desktop:  1024px;
         margin: 0;
     }
 
-    &__list {
+    &.list {
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
     }
+    .severity-label{
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: $text-muted;
+        font-size: 0.8rem;
+        font-weight:500 ;
+    }
+
+    .severity-tags{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding-bottom: 0.6rem ;
+    }
+
 }
 
 .skill-tag {
@@ -713,19 +731,19 @@ $desktop:  1024px;
     border: 1px solid;
     cursor: default;
 
-    &--high {
+    &.high {
         color: $severity-high;
         background-color: rgba($severity-high, 0.1);
         border-color: rgba($severity-high, 0.25);
     }
 
-    &--medium {
+    &.medium {
         color: $severity-medium;
         background-color: rgba($severity-medium, 0.1);
         border-color: rgba($severity-medium, 0.25);
     }
 
-    &--low {
+    &.low {
         color: $severity-low;
         background-color: rgba($severity-low, 0.1);
         border-color: rgba($severity-low, 0.25);

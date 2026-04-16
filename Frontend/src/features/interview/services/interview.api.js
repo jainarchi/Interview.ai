@@ -51,7 +51,7 @@ export async function getInterviewReport(id){
 export async function deleteInterviewReport(id) {
     try{
         const response = await api.delete(`/api/interview/report/${id}`)
-        console.log(response.data.message)
+        return response.data
         
     }
     catch(err){

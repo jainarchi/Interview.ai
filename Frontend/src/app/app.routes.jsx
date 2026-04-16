@@ -23,7 +23,7 @@ export const appRoutes = createBrowserRouter([
         element : <Home />
     },
     {
-        path: '/Interview',
+        path: '/Interview/:interviewId',
         element: <Interview />
     },
     {

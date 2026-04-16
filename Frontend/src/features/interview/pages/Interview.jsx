@@ -26,7 +26,7 @@ const QuestionCard = ({ item, index }) => {
                 <div className='q-card__body'>
                     <div className='q-card__section'>
                         <span className='q-card__tag q-card__tag--intention'>Intention</span>
-                        <p>{item.intention}</p>
+                        <p>{item.intension}</p>
                     </div>
                     <div className='q-card__section'>
                         <span className='q-card__tag q-card__tag--answer'>Model Answer</span>
@@ -38,22 +38,22 @@ const QuestionCard = ({ item, index }) => {
     )
 }
 
-const RoadMapDay = ({ day }) => (
+
+const RoadMapDay = ({ day , dayNo}) =>{
+     const tasks = day.tasks || day.activities    
+
+    return(
     <div className='roadmap-day'>
         <div className='roadmap-day__header'>
-            <span className='roadmap-day__badge'>Day {day.day}</span>
+            <span className='roadmap-day__badge'>Day {dayNo}</span>
             <h3 className='roadmap-day__focus'>{day.focus}</h3>
         </div>
-        <ul className='roadmap-day__tasks'>
-            {day.tasks.map((task, i) => (
-                <li key={i}>
-                    <span className='roadmap-day__bullet' />
-                    {task}
-                </li>
-            ))}
-        </ul>
+        <div className='roadmap-day__tasks'>
+            {tasks}
+            
+        </div>
     </div>
-)
+)}
 
 // Main Component 
 const Interview = () => {
@@ -89,15 +89,17 @@ const Interview = () => {
                 {/*  Left Nav  */}
                 <nav className='interview-nav'>
                     <div className="nav-content">
-                        <p className='interview-nav__label'>Sections</p>
+                        <p className='interview-nav label'>Sections</p>
                         {NAV_ITEMS.map(item => (
                             <button
                                 key={item.id}
-                                className={`interview-nav__item ${activeNav === item.id ? 'interview-nav__item--active' : ''}`}
+                                className={`interview-nav item ${activeNav === item.id ? 'interview-nav item active' : ''}`}
                                 onClick={() => setActiveNav(item.id)}
                             >
                                 <span className='interview-nav__icon'>{item.icon}</span>
                                 {item.label}
+
+                               
                             </button>
                         ))}
                     </div>
@@ -109,8 +111,7 @@ const Interview = () => {
                     </button> */}
                 </nav>
 
-                <div className='interview-divider' />
-
+             
                 {/* ── Center Content ── */}
                 <main className='interview-content'>
                     {activeNav === 'technical' && (
@@ -148,8 +149,8 @@ const Interview = () => {
                                 <span className='content-header__count'>{report.preparationPlan.length}-day plan</span>
                             </div>
                             <div className='roadmap-list'>
-                                {report.preparationPlan.map((day) => (
-                                    <RoadMapDay key={day.day} day={day} />
+                                {report.preparationPlan.map((day , index) => (
+                                    <RoadMapDay key={index+1} day={day} dayNo={index + 1 } />
                                 ))}
                             </div>
                         </section>
@@ -168,17 +169,25 @@ const Interview = () => {
                             <span className='match-score__value'>{report.matchScore}</span>
                             <span className='match-score__pct'>%</span>
                         </div>
-                        <p className='match-score__sub'>Strong match for this role</p>
+                        <p className='match-score__sub'> Match for this role</p>
                     </div>
 
                     <div className='sidebar-divider' />
 
                     {/* Skill Gaps */}
                     <div className='skill-gaps'>
-                        <p className='skill-gaps__label'>Skill Gaps</p>
-                        <div className='skill-gaps__list'>
+                        <p className='skill-gaps label'>Skill Gaps</p>
+                        <p className='severity-label'>severity</p>
+                         <div className='severity-tags'>
+                            
+                             <span className='skill-tag high' >High</span>
+                             <span className='skill-tag medium' >Medium</span>
+                             <span className='skill-tag low'  >Low</span>
+
+                         </div>
+                        <div className='skill-gaps list'>
                             {report.skillGaps.map((gap, i) => (
-                                <span key={i} className={`skill-tag skill-tag--${gap.severity}`}>
+                                <span key={i} className={`skill-tag  ${gap.severity}`}>
                                     {gap.skill}
                                 </span>
                             ))}

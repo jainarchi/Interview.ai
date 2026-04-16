@@ -13,6 +13,7 @@ export const useInterview = () => {
             setLoading(true)
             const data = await generateInterviewReport({jobDescription , selfDescription , resumeFile})
             setReport(data.newReport)
+            return data.newReport
 
         } catch (err) {
             console.log(err)
@@ -49,17 +50,12 @@ export const useInterview = () => {
 
        const handleDeleteReport = async (id) => {
         try {
-            setLoading(true)
-            const data = await deleteInterviewReport(id)
-            console.log(data.message)
-
-           setReports(reports.filter(report => report._id !== id))
+            await deleteInterviewReport(id)
+            setReports(reports.filter(report => report._id !== id))
 
         } catch (err) {
             console.log(err)
-        } finally {
-            setLoading(false)
-        }
+        } 
        }  
 
 
